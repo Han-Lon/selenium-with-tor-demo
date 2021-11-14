@@ -1,0 +1,9 @@
+# Ignore local Terraform build files
+.terraform/
+.terraform*
+*.tfstate*
+
+# Ignore local IDE files
+venv/
+.idea/
+__pycache__/
