@@ -5,6 +5,7 @@ import pathlib
 project_filepath = pathlib.Path(__file__).parent.absolute()
 
 
+# Fill different input elements in a form based on a passed in id and value
 def fill_form(driver, id, value=None):
     if id == "submit":
         element = driver.find_element_by_css_selector("[type='submit']")
@@ -17,8 +18,12 @@ def fill_form(driver, id, value=None):
 def visit_site(url, name):
     # Start xvfb to handle virtual display
     xvfb_display = start_xvfb()
+
+    # Configuration for the Selenium-driven browser
     pref_dict = {"permissions.default.image": 2,
                  "extensions.torbutton.loglevel": 5}  # Don't load images and set Torbutton log level to WARN
+
+    # Create a new Tor Browser instance with Selenium, go to the target site, fill in different input elements on the page, then click submit and save a screenshot of the interactive output
     with TorBrowserDriver(str(project_filepath / "tor-browser_en-US"),
                           pref_dict=pref_dict,
                           executable_path=str(project_filepath / "geckodriver")) as driver:
@@ -28,6 +33,8 @@ def visit_site(url, name):
             fill_form(driver, "submit")
             driver.get_screenshot_as_file(out_img)
             print("Screenshot is saved as %s" % out_img)
+
+    # Stop the xvfb display-- especially critical if running multiple jobs/multiprocessing
     stop_xvfb(xvfb_display)
 
 
