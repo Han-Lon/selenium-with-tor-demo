@@ -59,3 +59,7 @@ resource "aws_s3_bucket_object" "index-file-upload" {
 
   content_type = "text/html"
 }
+
+output "website-endpoint" {
+  value = "http://${aws_s3_bucket.website-bucket.website_endpoint}/"
+}

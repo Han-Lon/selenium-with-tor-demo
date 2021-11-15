@@ -15,6 +15,7 @@ def fill_form(driver, id, value=None):
 
 
 def visit_site(url, name):
+    # Start xvfb to handle virtual display
     xvfb_display = start_xvfb()
     pref_dict = {"permissions.default.image": 2,
                  "extensions.torbutton.loglevel": 5}  # Don't load images and set Torbutton log level to WARN
