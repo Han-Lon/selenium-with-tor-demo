@@ -13,15 +13,6 @@ data "aws_ami" "ubuntu-image" {
   owners = ["099720109477"]
 }
 
-# Render the userdata file with dynamic variables
-data "template_file" "selenium-userdata" {
-  template = "./selenium-userdata.sh.tpl"
-  vars = {
-    gecko_dl_url = var.gecko_dl_url
-    tor_dl_url = var.tor_dl_url
-  }
-}
-
 # Grab the IP of the local machine for setting up security group
 data "http" "local-ip" {
   url = "https://ipv4.icanhazip.com/"
@@ -63,13 +54,23 @@ resource "aws_security_group" "local-ssh-only" {
   }
 }
 
+# Deploy the selenium-tor-demo instance via a Spot request (much cheaper than on-demand) in the default VPC
 resource "aws_spot_instance_request" "selenium-instance" {
   ami = data.aws_ami.ubuntu-image.id
   instance_type = "t3.micro"
   spot_type = "one-time"  # Request will fulfill exactly once and then NOT refulfill when price drops back down
   spot_price = var.spot_price
 
-  user_data = data.template_file.selenium-userdata.rendered
+  key_name = var.ec2_key_name  # This will not be automatically generated-- you will have to generate an AWS EC2 key pair beforehand
 
-  security_groups = [aws_security_group.local-ssh-only.id]
+  user_data = templatefile("selenium-userdata.sh", {
+    gecko_dl_url = var.gecko_dl_url
+    tor_dl_url = var.tor_dl_url
+  })
+
+  vpc_security_group_ids = [aws_security_group.local-ssh-only.id]
+
+  tags = {
+    Name = "selenium-with-tor-demo"
+  }
 }

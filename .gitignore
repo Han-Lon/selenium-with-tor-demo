@@ -2,6 +2,7 @@
 .terraform/
 .terraform*
 *.tfstate*
+*.tfvars
 
 # Ignore local IDE files
 venv/

@@ -17,3 +17,7 @@ variable "tor_dl_url" {
   default = "https://www.torproject.org/dist/torbrowser/11.0/tor-browser-linux64-11.0_en-US.tar.xz"
   description = "The download URL for latest version of Tor Browser"
 }
+
+variable "ec2_key_name" {
+  description = "The name of the EC2 instance key pair to use for the Selenium EC2 instance"
+}

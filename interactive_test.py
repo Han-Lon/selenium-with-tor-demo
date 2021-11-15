@@ -35,3 +35,4 @@ if __name__ == "__main__":
     website_url = input("Enter a website URL to visit with TOR: ")
     input_name = input("Enter a random name: ")
     visit_site(website_url, input_name)
+
